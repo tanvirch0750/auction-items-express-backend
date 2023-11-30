@@ -72,3 +72,58 @@ export const findFilterConditionsWithoutRelation = (
 
   return andConditions;
 };
+
+export const findFilterConditionsWithPrice = (
+  searchTerm: string | undefined,
+  filtersData: Record<string, any>,
+  searchableFields: string[],
+  relationalFields: string[],
+  relationalFieldsMapper: { [key: string]: string }
+) => {
+  const andConditions = [];
+
+  if (searchTerm) {
+    andConditions.push({
+      OR: searchableFields.map(field => ({
+        [field]: {
+          contains: searchTerm,
+          mode: 'insensitive',
+        },
+      })),
+    });
+  }
+
+  if (Object.keys(filtersData).length > 0) {
+    andConditions.push({
+      AND: Object.keys(filtersData).map(key => {
+        if (relationalFields.includes(key)) {
+          return {
+            [relationalFieldsMapper[key]]: {
+              id: filtersData[key],
+            },
+          };
+        } else if (key === 'minPrice') {
+          return {
+            initialBiddingPrice: {
+              gte: Number(filtersData[key]),
+            },
+          };
+        } else if (key === 'maxPrice') {
+          return {
+            initialBiddingPrice: {
+              lte: Number(filtersData[key]),
+            },
+          };
+        } else {
+          return {
+            [key]: {
+              equals: filtersData[key],
+            },
+          };
+        }
+      }),
+    });
+  }
+
+  return andConditions;
+};
