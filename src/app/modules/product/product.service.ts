@@ -154,6 +154,46 @@ const getDataByCategory = async (categoryId: string): Promise<Product[]> => {
   return products;
 };
 
+const startBidding = async (id: string): Promise<Product> => {
+  const result = await prisma.product.update({
+    where: {
+      id,
+    },
+    data: {
+      auctionStatus: 'ongoing',
+    },
+    include: {
+      category: true,
+      productOwner: true,
+      auctionWinner: true,
+      auctionBiddingHistory: true,
+      messages: true,
+    },
+  });
+
+  return result;
+};
+
+const endBidding = async (id: string): Promise<Product> => {
+  const result = await prisma.product.update({
+    where: {
+      id,
+    },
+    data: {
+      auctionStatus: 'end',
+    },
+    include: {
+      category: true,
+      productOwner: true,
+      auctionWinner: true,
+      auctionBiddingHistory: true,
+      messages: true,
+    },
+  });
+
+  return result;
+};
+
 export const ProductServices = {
   insertIntoDB,
   getAllFromDB,
@@ -161,4 +201,6 @@ export const ProductServices = {
   updateDataById,
   deleteDataById,
   getDataByCategory,
+  startBidding,
+  endBidding,
 };

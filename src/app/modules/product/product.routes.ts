@@ -7,6 +7,18 @@ import { validationSchema } from './product.validation';
 
 const router = express.Router();
 
+router.patch(
+  '/end-bidding',
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
+  ProductController.endBidding
+);
+
+router.patch(
+  '/start-bidding',
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
+  ProductController.startBidding
+);
+
 router.get('/:id', ProductController.getDataById);
 router.get('/:categoryId/category', ProductController.getProductByCategory);
 

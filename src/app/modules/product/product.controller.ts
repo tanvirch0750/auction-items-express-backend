@@ -85,6 +85,42 @@ const updateDataById: RequestHandler = catchAsync(async (req, res, next) => {
   });
 });
 
+const startBidding: RequestHandler = catchAsync(async (req, res, next) => {
+  const result = await ProductServices.startBidding(req.params.id);
+
+  if (!result) {
+    return next(
+      new ApiError(`No product found with this id`, httpStatus.NOT_FOUND)
+    );
+  }
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    status: 'success',
+    message: 'Bidding start',
+    data: result,
+  });
+});
+
+const endBidding: RequestHandler = catchAsync(async (req, res, next) => {
+  const result = await ProductServices.endBidding(req.params.id);
+
+  if (!result) {
+    return next(
+      new ApiError(`No product found with this id`, httpStatus.NOT_FOUND)
+    );
+  }
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    status: 'success',
+    message: 'Bidding end',
+    data: result,
+  });
+});
+
 const deleteDataById: RequestHandler = catchAsync(async (req, res, next) => {
   const result = await ProductServices.deleteDataById(req.params.id);
 
@@ -122,4 +158,6 @@ export const ProductController = {
   updateDataById,
   deleteDataById,
   getProductByCategory,
+  startBidding,
+  endBidding,
 };
