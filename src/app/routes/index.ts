@@ -1,4 +1,5 @@
 import express from 'express';
+import { abhRoutes } from '../modules/auction-bidding-history/abh.routes';
 import { auctionWinnerRoutes } from '../modules/auction-winner/auctionWinner.routes';
 import { categoryRoutes } from '../modules/category/category.routes';
 import { productRoutes } from '../modules/product/product.routes';
@@ -31,6 +32,10 @@ const moduleRoutes = [
   {
     path: '/auction-winner',
     route: auctionWinnerRoutes,
+  },
+  {
+    path: '/abh',
+    route: abhRoutes,
   },
 ];
 
