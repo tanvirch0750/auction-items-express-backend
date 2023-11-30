@@ -2,6 +2,7 @@ import express from 'express';
 import { abhRoutes } from '../modules/auction-bidding-history/abh.routes';
 import { auctionWinnerRoutes } from '../modules/auction-winner/auctionWinner.routes';
 import { categoryRoutes } from '../modules/category/category.routes';
+import { paymentRoutes } from '../modules/payment/payment.routes';
 import { messageRoutes } from '../modules/product-message/message.routes';
 import { productRoutes } from '../modules/product/product.routes';
 import { authRoutes } from '../modules/users/auth.routes';
@@ -41,6 +42,10 @@ const moduleRoutes = [
   {
     path: '/message',
     route: messageRoutes,
+  },
+  {
+    path: '/payment',
+    route: paymentRoutes,
   },
 ];
 
