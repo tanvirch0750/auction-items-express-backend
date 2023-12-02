@@ -25,15 +25,16 @@ const insertIntoDB = async (data: AuctionWinner) => {
       },
     });
 
-    const payment = await transactionClient.payment.create({
-      data: {
-        auctionWinnerId: aw.auctionWinnerId,
-      },
-    });
+    // console.log(aw);
+
+    // const payment = await transactionClient.payment.create({
+    //   data: {
+    //     auctionWinnerId: aw.auctionWinnerId,
+    //   },
+    // });
 
     return {
       auctionWinner: aw,
-      payment: payment,
     };
   });
 
