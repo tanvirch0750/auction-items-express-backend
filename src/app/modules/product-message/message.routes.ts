@@ -28,6 +28,10 @@ router.post(
   MessageController.insertIntoDB
 );
 
-router.get('/', auth(ENUM_USER_ROLE.ADMIN), MessageController.getAllFromDB);
+router.get(
+  '/',
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
+  MessageController.getAllFromDB
+);
 
 export const messageRoutes = router;

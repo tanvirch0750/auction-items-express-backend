@@ -17,6 +17,10 @@ router.post(
   AbhController.insertIntoDB
 );
 
-router.get('/', auth(ENUM_USER_ROLE.ADMIN), AbhController.getAllFromDB);
+router.get(
+  '/',
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
+  AbhController.getAllFromDB
+);
 
 export const abhRoutes = router;

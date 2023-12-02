@@ -8,13 +8,13 @@ import { validationSchema } from './product.validation';
 const router = express.Router();
 
 router.patch(
-  '/end-bidding',
+  '/end-bidding/:id',
   auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
   ProductController.endBidding
 );
 
 router.patch(
-  '/start-bidding',
+  '/start-bidding/:id',
   auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
   ProductController.startBidding
 );
@@ -30,13 +30,13 @@ router.delete(
 
 router.patch(
   '/:id',
-  auth(ENUM_USER_ROLE.ADMIN),
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
   ProductController.updateDataById
 );
 
 router.post(
   '/',
-  auth(ENUM_USER_ROLE.ADMIN),
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.USER),
   validateRequest(validationSchema.create),
   ProductController.insertIntoDB
 );

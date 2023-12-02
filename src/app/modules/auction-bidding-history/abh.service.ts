@@ -1,4 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
 import { AuctionBiddingHistory, Prisma } from '@prisma/client';
+import httpStatus from 'http-status';
+import ApiError from '../../../errors/ApiError';
 import { calculatePagination } from '../../../helpers/paginationHelper';
 import { IGenericPaginationResponse } from '../../../interfaces/genericPaginationResponse';
 import { IpaginationOptions } from '../../../interfaces/paginationOptions';
@@ -7,12 +11,54 @@ import { orderByConditions } from '../../../shared/orderCondition';
 import prisma from '../../../shared/prisma';
 import { IAbhFilters, abhSearchableFields } from './abh.constant';
 
-const insertIntoDB = async (
-  data: AuctionBiddingHistory
-): Promise<AuctionBiddingHistory> => {
-  const result = await prisma.auctionBiddingHistory.create({
-    data,
+const insertIntoDB = async (data: AuctionBiddingHistory) => {
+  const product = await prisma.product.findUnique({
+    where: {
+      id: data?.productId,
+    },
   });
+
+  if (!product) {
+    throw new ApiError(`No product found with this id`, httpStatus.NOT_FOUND);
+  }
+
+  const result = await prisma.$transaction(async transactionClient => {
+    const abh = await transactionClient.auctionBiddingHistory.create({
+      data: {
+        productId: product?.id,
+        bidderId: data?.bidderId,
+        amount: product?.currentBiddingPrice + product?.incrementAmount,
+      },
+      include: {
+        bidder: true,
+        product: true,
+      },
+    });
+
+    const productUpdate = await transactionClient.product.update({
+      where: {
+        id: abh.productId,
+      },
+      data: {
+        currentBiddingPrice: abh?.amount,
+      },
+      include: {
+        category: true,
+        productOwner: true,
+        auctionWinner: true,
+        auctionBiddingHistory: true,
+        messages: true,
+      },
+    });
+
+    return {
+      abh,
+    };
+  });
+
+  // const result = await prisma.auctionBiddingHistory.create({
+  //   data,
+  // });
   return result;
 };
 
