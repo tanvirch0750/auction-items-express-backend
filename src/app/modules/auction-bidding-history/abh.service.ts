@@ -6,6 +6,7 @@ import ApiError from '../../../errors/ApiError';
 import { calculatePagination } from '../../../helpers/paginationHelper';
 import { IGenericPaginationResponse } from '../../../interfaces/genericPaginationResponse';
 import { IpaginationOptions } from '../../../interfaces/paginationOptions';
+import { io } from '../../../server';
 import { findFilterConditionsWithoutRelation } from '../../../shared/findFilterConditions';
 import { orderByConditions } from '../../../shared/orderCondition';
 import prisma from '../../../shared/prisma';
@@ -50,6 +51,9 @@ const insertIntoDB = async (data: AuctionBiddingHistory) => {
         messages: true,
       },
     });
+
+    // Emit a bid update event to all connected clients
+    io.emit('bidUpdate', abh);
 
     return {
       abh,

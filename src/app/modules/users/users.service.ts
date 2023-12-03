@@ -84,16 +84,16 @@ const loginUser = async (data: ISigninUser): Promise<ISigninUserResponse> => {
   }
 
   // create access token
-  const { id: userId, role, email: userEmail } = user;
+  const { id: userId, role, email: userEmail, fullName } = user;
   const accessToken = jwtHelpers.createToken(
-    { userId, role, userEmail },
+    { userId, role, userEmail, fullName },
     config.jwt.secret as Secret,
     config.jwt.expires_in as string
   );
 
   // create refresh token
   const refreshToken = jwtHelpers.createToken(
-    { userId, role, userEmail },
+    { userId, role, userEmail, fullName },
     config.jwt.refresh_secret as Secret,
     config.jwt.refresh_expires_in as string
   );
